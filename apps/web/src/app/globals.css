@@ -1,0 +1,188 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Design system BV v1 — tema escuro (padrão). Monocromático: grafite, carvão e
+ * branco, sem cor de matiz; contraste entre peso grosso e fio fino. Sem sombras
+ * nem brilhos: a profundidade vem só do gradiente da marca.
+ *
+ * Única exceção registrada: `danger`, usado apenas em mensagens de erro de
+ * formulário (informação que não pode depender só do texto).
+ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-jost);
+  --font-mono: var(--font-jetbrains-mono);
+  --font-heading: var(--font-jost);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  /* Tokens do design system (02 — Cor, temas: escuro) */
+  --color-surface: #161616; /* surface-000: fundo da página */
+  --color-surface-100: #202326; /* cartões e painéis */
+  --color-surface-200: #2b3034; /* superfície elevada, blocos de código */
+  --color-ink: #ffffff; /* texto principal, títulos e a logo */
+  --color-ink-muted: #a3a9ae; /* texto secundário, tags, legendas (5,5:1) */
+  --color-line-strong: #7a8187; /* bordas de controles e ícones (3:1) */
+  --color-hairline: #3a4045; /* filetes e divisórias decorativas */
+  --color-danger: #ff8a80;
+
+  /* Tema claro (verso do cartão): usado nas seções "Sobre" e no depoimento do projeto */
+  --color-paper: #ffffff;
+  --color-paper-100: #f3f4f5;
+  --color-paper-ink: #161616;
+  --color-paper-muted: #565c61;
+  --color-paper-line: #7c838a;
+  --color-paper-hairline: #d3d6d9;
+
+  /* 03 — Cor, marca */
+  --color-grafite: #2b3034;
+  --color-grafite-medio: #202326;
+  --color-carvao: #161616;
+
+  /* 05 — Cantos: radius-0 padrão, 2px botões, 4px imagens e cartões. Nada acima disso. */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 4px;
+  --radius-xl: 4px;
+  --radius-2xl: 4px;
+  --radius-3xl: 4px;
+  --radius-4xl: 4px;
+
+  /* Caixa alta só em rótulos curtos, com espaçamento largo */
+  --tracking-label: 0.14em;
+
+  /* Faixa de logos em loop: cada cópia da lista anda a própria largura + o espaço entre elas */
+  --animate-marquee: marquee var(--marquee-duration, 30s) linear infinite;
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - var(--marquee-gap)));
+    }
+  }
+
+  /* Cursor do terminal na linha de código do hero */
+  --animate-caret: caret 1.1s steps(1) infinite;
+  @keyframes caret {
+    50% {
+      opacity: 0;
+    }
+  }
+}
+
+:root {
+  color-scheme: dark;
+  --background: #161616;
+  --foreground: #ffffff;
+  --card: #202326;
+  --card-foreground: #ffffff;
+  --popover: #202326;
+  --popover-foreground: #ffffff;
+  --primary: #ffffff;
+  --primary-foreground: #161616;
+  --secondary: #2b3034;
+  --secondary-foreground: #ffffff;
+  --muted: #2b3034;
+  --muted-foreground: #a3a9ae;
+  --accent: #2b3034;
+  --accent-foreground: #ffffff;
+  --destructive: #ff8a80;
+  --border: #3a4045;
+  --input: #7a8187;
+  --ring: #ffffff;
+  --radius: 2px;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply bg-surface font-sans;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-surface text-ink antialiased;
+  }
+  ::selection {
+    @apply bg-ink text-surface;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  /* focus-ring: 2px, 2px de afastamento */
+  :focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+  }
+  /* No tema claro, o anel de foco é carvão. */
+  .bg-paper :focus-visible {
+    outline-color: #161616;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@layer components {
+  /* Gradiente da marca: sempre vertical, grafite em cima, carvão embaixo. */
+  .bg-brand {
+    background-color: var(--color-carvao);
+    background-image: linear-gradient(180deg, var(--color-grafite), var(--color-carvao));
+  }
+
+  /* Rótulo em forma de tag de código: <serviços />. Mono 300, minúsculas, ink-muted. */
+  .tag-code {
+    @apply font-mono text-sm leading-[22px] font-light text-ink-muted lowercase;
+  }
+
+  /* label: sans 12px 500, 0.14em, caixa alta */
+  .label-caps {
+    @apply text-xs leading-4 font-medium tracking-label text-ink-muted uppercase;
+  }
+
+  .section-container {
+    @apply mx-auto w-full max-w-[1280px] px-4 sm:px-8 lg:px-12;
+  }
+
+  /* Campos: borda line-strong (3:1), radius-sm */
+  .field {
+    @apply w-full rounded-sm border border-line-strong bg-surface px-4 py-3 text-base text-ink placeholder:text-ink-muted/70;
+  }
+
+  /* Botões do design system. Primário: fundo ink, texto surface-000; um por tela. */
+  .btn-primary,
+  .btn-secondary {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-sm border border-ink px-6 text-[15px] leading-none font-medium transition-colors;
+  }
+  .btn-primary {
+    @apply bg-ink text-surface hover:bg-ink/85;
+  }
+  /* Secundário: contorno ink. */
+  .btn-secondary {
+    @apply text-ink hover:bg-ink hover:text-surface;
+  }
+}

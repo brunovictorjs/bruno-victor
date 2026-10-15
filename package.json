@@ -1,0 +1,30 @@
+{
+  "name": "bruno-victor-dev",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Site bilíngue (PT/EN) e painel administrativo de Bruno Victor, desenvolvedor de software",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build:shared": "npm run build -w @bv/shared",
+    "dev": "npm run build:shared && concurrently -k -n shared,api,web -c gray,blue,magenta \"npm run dev -w @bv/shared\" \"npm run start:dev -w @bv/api\" \"npm run dev -w @bv/web\"",
+    "dev:api": "npm run start:dev -w @bv/api",
+    "dev:web": "npm run dev -w @bv/web",
+    "build": "npm run build:shared && npm run build -w @bv/api && npm run build -w @bv/web",
+    "db:setup": "npm run db:setup -w @bv/api",
+    "db:migrate": "npm run db:migrate -w @bv/api",
+    "db:seed": "npm run db:seed -w @bv/api",
+    "db:studio": "npm run db:studio -w @bv/api",
+    "lint": "npm run lint -w @bv/api && npm run lint -w @bv/web",
+    "test": "npm run test -w @bv/api",
+    "typecheck": "npm run build:shared && tsc -p apps/api/tsconfig.json --noEmit && tsc -p apps/web/tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
